@@ -99,7 +99,7 @@ const Odontograms = ({ sidebarCollapsed }) => {
       style={{
         marginLeft: sidebarCollapsed ? "70px" : "250px",
         paddingTop: "80px",
-        marginTop: "45px",
+        marginTop: "70px",
         transition: "margin-left 0.3s ease-in-out",
         minHeight: "calc(100vh - 60px)",
         backgroundColor: "#f1f5f9",

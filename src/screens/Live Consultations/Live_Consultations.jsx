@@ -41,6 +41,7 @@ const Live_Consultations = ({ sidebarCollapsed }) => {
     <div style={{
       marginLeft: sidebarCollapsed ? '70px' : '250px',
       paddingTop: '80px',
+      marginTop: '80px',
       transition: 'margin-left 0.3s ease-in-out',
       minHeight: '100vh',
       backgroundColor: '#f4f6f9',
@@ -142,7 +143,9 @@ const Live_Consultations = ({ sidebarCollapsed }) => {
 
       {/* Add Modal */}
       {adding && (
-        <div style={{ position: 'fixed', top:0, left:0, width:'100vw', height:'100vh', backgroundColor:'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center' }}>
+        <div style={{ position: 'fixed', top:0, left:0, width:'100vw', height:'100vh',
+        marginLeft : sidebarCollapsed ? '70px' : '100px',
+        backgroundColor:'rgba(0,0,0,0.5)', display:'flex', justifyContent:'center', alignItems:'center' }}>
           <div style={{ background:'#fff', padding:'30px', borderRadius:'12px', minWidth:'300px' }}>
             <h3 style={{ marginBottom:'20px' }}>Add New Consultation</h3>
             <input type="text" placeholder="Title" value={newConsultation.title} onChange={e=>setNewConsultation({...newConsultation,title:e.target.value})} style={{ width:'100%', padding:'10px', marginBottom:'10px', borderRadius:'8px', border:'1px solid #ccc' }} />

@@ -51,6 +51,7 @@ const Enquiries = ({ sidebarCollapsed }) => {
       style={{
         marginLeft: sidebarCollapsed ? '70px' : '250px',
         paddingTop: '80px',
+        marginTop: '50px',
         transition: 'margin-left 0.3s',
         minHeight: '100vh',
         backgroundColor: '#f3f6fb',

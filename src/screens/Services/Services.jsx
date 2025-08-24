@@ -44,11 +44,13 @@ const Services = ({ sidebarCollapsed }) => {
       className="main-content"
       style={{
         marginLeft: sidebarCollapsed ? '70px' : '250px',
-        paddingTop: '80px',
+        marginTop: '120px', // 🔥 full section neeche shift hoga
         transition: 'margin-left 0.3s ease-in-out',
         minHeight: 'calc(100vh - 60px)',
         backgroundColor: '#f4f6f9',
+        // padding: '20px',
       }}
+
     >
       <div className="container-fluid px-4">
         {/* Header */}

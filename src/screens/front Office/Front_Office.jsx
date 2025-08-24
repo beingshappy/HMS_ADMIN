@@ -54,6 +54,7 @@ const Front_Office = ({ sidebarCollapsed }) => {
       style={{
         marginLeft: sidebarCollapsed ? '70px' : '250px',
         paddingTop: '80px',
+        marginTop: '80px',
         transition: 'margin-left 0.3s ease-in-out',
         minHeight: '100vh',
         backgroundColor: '#f1f6fb',

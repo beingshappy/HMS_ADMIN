@@ -198,6 +198,7 @@ const Appointments = ({ sidebarCollapsed }) => {
       style={{
         marginLeft: sidebarCollapsed ? "70px" : "250px",
         paddingTop: "80px",
+        marginTop: "100px",
         transition: "margin-left 0.3s ease-in-out",
         minHeight: "calc(100vh - 60px)",
         backgroundColor: "#f8f9fa",

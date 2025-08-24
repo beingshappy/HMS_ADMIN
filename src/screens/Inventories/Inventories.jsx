@@ -53,6 +53,7 @@ const Inventories = ({ sidebarCollapsed }) => {
     <div style={{
       marginLeft: sidebarCollapsed ? '70px' : '250px',
       paddingTop: '80px',
+      marginTop: '120px',
       transition: 'margin-left 0.3s ease-in-out',
       minHeight: '100vh',
       backgroundColor: '#f4f6f9',
@@ -173,6 +174,7 @@ const Inventories = ({ sidebarCollapsed }) => {
           top: 0, left: 0,
           width: '100vw', height: '100vh',
           backgroundColor: 'rgba(0,0,0,0.5)',
+          marginLeft: sidebarCollapsed ? '70px' : '100px',
           display: 'flex', justifyContent: 'center', alignItems: 'center'
         }}>
           <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '12px', minWidth: '300px' }}>

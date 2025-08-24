@@ -63,11 +63,12 @@ const Radiology = ({ sidebarCollapsed }) => {
     <div
       style={{
         marginLeft: sidebarCollapsed ? '70px' : '250px',
-        paddingTop: '80px',
+        marginTop: '120px',   // 👈 ab div neeche shift hoga
         minHeight: '100vh',
         background: '#f4f6f9',
         padding: '20px',
       }}
+
     >
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">

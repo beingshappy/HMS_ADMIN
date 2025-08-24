@@ -72,7 +72,7 @@ const Blood_banks = ({ sidebarCollapsed }) => {
   const handleDelete = id => setData(prev => prev.filter(d => d.id !== id));
 
   return (
-    <div className="main-content" style={{ marginLeft: sidebarCollapsed ? "70px" : "250px", paddingTop: "80px", minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
+    <div className="main-content" style={{ marginLeft: sidebarCollapsed ? "70px" : "250px", paddingTop: "80px", marginTop: "20px", minHeight: "100vh", backgroundColor: "#f8f9fa" }}>
       <div className="container-fluid px-4">
         {/* Header */}
         <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
@@ -134,9 +134,9 @@ const Blood_banks = ({ sidebarCollapsed }) => {
 
           {/* Pagination */}
           <div className="d-flex justify-content-between align-items-center p-3">
-            <button className="btn btn-outline-primary" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage===1}>Previous</button>
-            <div>{Array.from({length: totalPages}, (_, i) => <button key={i} onClick={() => setCurrentPage(i+1)} className={`btn mx-1 ${currentPage===i+1?'btn-primary':'btn-outline-primary'}`}>{i+1}</button>)}</div>
-            <button className="btn btn-outline-primary" onClick={() => setCurrentPage(p => Math.min(p+1, totalPages))} disabled={currentPage===totalPages}>Next</button>
+            <button className="btn btn-outline-primary" onClick={() => setCurrentPage(p => Math.max(p - 1, 1))} disabled={currentPage === 1}>Previous</button>
+            <div>{Array.from({ length: totalPages }, (_, i) => <button key={i} onClick={() => setCurrentPage(i + 1)} className={`btn mx-1 ${currentPage === i + 1 ? 'btn-primary' : 'btn-outline-primary'}`}>{i + 1}</button>)}</div>
+            <button className="btn btn-outline-primary" onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))} disabled={currentPage === totalPages}>Next</button>
           </div>
         </div>
       </div>

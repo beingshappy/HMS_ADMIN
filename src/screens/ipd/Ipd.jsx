@@ -79,7 +79,7 @@ const Ipd = ({ sidebarCollapsed }) => {
       className="main-content"
       style={{
         marginLeft: sidebarCollapsed ? "70px" : "250px",
-        paddingTop: "80px",
+        paddingTop: "100px",
         transition: "margin-left 0.3s ease-in-out",
         minHeight: "100vh",
         backgroundColor: "#f8f9fa",
