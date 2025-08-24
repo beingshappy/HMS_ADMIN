@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaFilter, FaUserPlus, FaTrashAlt, FaEdit } from "react-icons/fa";
 
 const initialUsers = [
@@ -73,20 +73,22 @@ const Users = ({ sidebarCollapsed }) => {
   const [users, setUsers] = useState(initialUsers);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [fadeIn, setFadeIn] = useState(false);
   const usersPerPage = 5;
 
-  // Filtered users by search
+  useEffect(() => {
+    setTimeout(() => setFadeIn(true), 100); // page fade-in
+  }, []);
+
   const filteredUsers = users.filter((u) =>
     u.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Pagination
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
-  // Add user
   const handleAdd = () => {
     const name = prompt("Enter user name:");
     const email = prompt("Enter user email:");
@@ -97,7 +99,6 @@ const Users = ({ sidebarCollapsed }) => {
     }
   };
 
-  // Edit user
   const handleEdit = (index) => {
     const user = currentUsers[index];
     const name = prompt("Edit name:", user.name);
@@ -106,12 +107,16 @@ const Users = ({ sidebarCollapsed }) => {
     if (name && email && role) {
       const updatedUsers = [...users];
       const globalIndex = users.indexOf(user);
-      updatedUsers[globalIndex] = { ...updatedUsers[globalIndex], name, email, role };
+      updatedUsers[globalIndex] = {
+        ...updatedUsers[globalIndex],
+        name,
+        email,
+        role,
+      };
       setUsers(updatedUsers);
     }
   };
 
-  // Delete user
   const handleDelete = (index) => {
     const user = currentUsers[index];
     if (window.confirm(`Delete ${user.name}?`)) {
@@ -120,7 +125,8 @@ const Users = ({ sidebarCollapsed }) => {
   };
 
   const handlePrev = () => setCurrentPage(Math.max(currentPage - 1, 1));
-  const handleNext = () => setCurrentPage(Math.min(currentPage + 1, totalPages));
+  const handleNext = () =>
+    setCurrentPage(Math.min(currentPage + 1, totalPages));
 
   return (
     <div
@@ -133,10 +139,19 @@ const Users = ({ sidebarCollapsed }) => {
         minHeight: "calc(100vh - 60px)",
         backgroundColor: "#f1f5f9",
         padding: "20px",
+        opacity: fadeIn ? 1 : 0,
+        transform: fadeIn ? "translateY(0px)" : "translateY(20px)",
+        transition: "all 0.6s ease",
       }}
     >
       {/* Header */}
-      <div className="users-header d-flex justify-content-between mb-3">
+      <div
+        className="users-header d-flex justify-content-between mb-3"
+        style={{
+          flexWrap: "wrap",
+          gap: "10px",
+        }}
+      >
         <input
           type="text"
           placeholder="Search"
@@ -145,18 +160,47 @@ const Users = ({ sidebarCollapsed }) => {
             setSearch(e.target.value);
             setCurrentPage(1);
           }}
-          style={{ padding: "8px 12px", borderRadius: "6px", width: "250px" }}
+          style={{
+            padding: "8px 12px",
+            borderRadius: "6px",
+            width: "250px",
+            border: "1px solid #ccc",
+            flex: "1 1 auto",
+          }}
         />
-        <div>
-          <button className="btn btn-light me-2"><FaFilter /></button>
-          <button className="btn btn-primary" onClick={handleAdd}>
-            <FaUserPlus className="me-1" /> New User
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <button
+            className="btn btn-light"
+            style={{
+              transition: "all 0.3s",
+            }}
+          >
+            <FaFilter />
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={handleAdd}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              transition: "all 0.3s",
+            }}
+          >
+            <FaUserPlus /> New User
           </button>
         </div>
       </div>
 
       {/* Table */}
-      <div className="users-table bg-white shadow-sm" style={{ borderRadius: "8px", overflow: "hidden" }}>
+      <div
+        className="users-table bg-white shadow-sm"
+        style={{
+          borderRadius: "8px",
+          overflowX: "auto",
+          transition: "transform 0.3s",
+        }}
+      >
         <div className="table-header d-flex p-2 bg-light">
           <span className="flex-2 fw-bold">USER</span>
           <span className="flex-1 fw-bold">ROLE</span>
@@ -167,12 +211,38 @@ const Users = ({ sidebarCollapsed }) => {
         </div>
 
         {currentUsers.map((user, index) => (
-          <div key={index} className="table-row d-flex align-items-center p-2 border-bottom">
+          <div
+            key={index}
+            className="table-row d-flex align-items-center p-2 border-bottom"
+            style={{
+              transition: "all 0.3s",
+            }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.backgroundColor = "#f9fafb")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.backgroundColor = "transparent")
+            }
+          >
             <div className="flex-2 d-flex align-items-center">
               {user.avatar ? (
-                <img src={user.avatar} alt={user.name} className="me-2 rounded-circle" style={{ width: "36px", height: "36px" }} />
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="me-2 rounded-circle"
+                  style={{ width: "36px", height: "36px" }}
+                />
               ) : (
-                <div className="me-2 rounded-circle text-center" style={{ width: "36px", height: "36px", backgroundColor: user.color || "#ccc", lineHeight: "36px", color: "#fff" }}>
+                <div
+                  className="me-2 rounded-circle text-center"
+                  style={{
+                    width: "36px",
+                    height: "36px",
+                    backgroundColor: user.color || "#ccc",
+                    lineHeight: "36px",
+                    color: "#fff",
+                  }}
+                >
                   {user.initials}
                 </div>
               )}
@@ -193,28 +263,71 @@ const Users = ({ sidebarCollapsed }) => {
             </span>
 
             <span className="flex-1 d-flex">
-              <FaEdit className="me-2 text-primary" style={{ cursor: "pointer" }} onClick={() => handleEdit(index)} />
-              <FaTrashAlt className="text-danger" style={{ cursor: "pointer" }} onClick={() => handleDelete(index)} />
+              <FaEdit
+                className="me-2 text-primary"
+                style={{ cursor: "pointer", transition: "all 0.3s" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.2)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+                onClick={() => handleEdit(index)}
+              />
+              <FaTrashAlt
+                className="text-danger"
+                style={{ cursor: "pointer", transition: "all 0.3s" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.transform = "scale(1.2)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.transform = "scale(1)")
+                }
+                onClick={() => handleDelete(index)}
+              />
             </span>
           </div>
         ))}
 
-        {currentUsers.length === 0 && <div className="text-center p-3 text-muted">No matching users found.</div>}
+        {currentUsers.length === 0 && (
+          <div className="text-center p-3 text-muted">
+            No matching users found.
+          </div>
+        )}
       </div>
 
       {/* Pagination */}
-      <div className="pagination d-flex justify-content-center mt-3">
-        <button className="btn btn-light me-1" onClick={handlePrev} disabled={currentPage === 1}>Previous</button>
+      <div
+        className="pagination d-flex justify-content-center mt-3"
+        style={{ flexWrap: "wrap", gap: "6px" }}
+      >
+        <button
+          className="btn btn-light"
+          onClick={handlePrev}
+          disabled={currentPage === 1}
+        >
+          Previous
+        </button>
         {[...Array(totalPages)].map((_, i) => (
           <button
             key={i}
-            className={`btn btn-light me-1 ${currentPage === i + 1 ? "active btn-primary text-white" : ""}`}
+            className={`btn btn-light ${currentPage === i + 1 ? "active btn-primary text-white" : ""
+              }`}
             onClick={() => setCurrentPage(i + 1)}
+            style={{
+              transition: "all 0.3s",
+            }}
           >
             {i + 1}
           </button>
         ))}
-        <button className="btn btn-light" onClick={handleNext} disabled={currentPage === totalPages}>Next</button>
+        <button
+          className="btn btn-light"
+          onClick={handleNext}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

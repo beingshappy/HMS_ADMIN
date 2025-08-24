@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaEdit, FaTrash, FaPrint } from "react-icons/fa";
 
 const initialData = [
@@ -6,27 +6,20 @@ const initialData = [
     patient: {
       name: "Noor Ahmed Shawqi",
       email: "ah700342030@gmail.com",
-      avatar: "https://randomuser.me/api/portraits/women/33.jpg",
     },
     doctor: {
       name: "Dr. Parag Patil",
       email: "demos@softaculous.com",
-      initials: "DP",
-      color: "#38bdf8",
     },
   },
   {
     patient: {
       name: "5445 43534544354",
       email: "fdgdfg@tgg.gh",
-      initials: "54",
-      color: "#ef4444",
     },
     doctor: {
       name: "Aya Hasan",
       email: "ayaalsoreky@gmail.com",
-      initials: "AH",
-      color: "#f87171",
     },
   },
 ];
@@ -35,7 +28,15 @@ const Odontograms = ({ sidebarCollapsed }) => {
   const [odontograms, setOdontograms] = useState(initialData);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const rowsPerPage = 6;
+
+  // Responsive check
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const filteredData = odontograms.filter(
     (item) =>
@@ -49,13 +50,12 @@ const Odontograms = ({ sidebarCollapsed }) => {
   const startIndex = (currentPage - 1) * rowsPerPage;
   const paginatedData = filteredData.slice(startIndex, startIndex + rowsPerPage);
 
-  // Add Odontogram
+  // Add
   const handleAdd = () => {
     const patientName = prompt("Enter patient name:");
     const patientEmail = prompt("Enter patient email:");
     const doctorName = prompt("Enter doctor name:");
     const doctorEmail = prompt("Enter doctor email:");
-
     if (patientName && patientEmail && doctorName && doctorEmail) {
       const newData = {
         patient: { name: patientName, email: patientEmail },
@@ -66,7 +66,7 @@ const Odontograms = ({ sidebarCollapsed }) => {
     }
   };
 
-  // Edit Odontogram
+  // Edit
   const handleEdit = (index) => {
     const item = paginatedData[index];
     const patientName = prompt("Edit patient name:", item.patient.name);
@@ -85,7 +85,7 @@ const Odontograms = ({ sidebarCollapsed }) => {
     }
   };
 
-  // Delete Odontogram
+  // Delete
   const handleDelete = (index) => {
     const item = paginatedData[index];
     if (window.confirm("Delete this record?")) {
@@ -108,11 +108,12 @@ const Odontograms = ({ sidebarCollapsed }) => {
     >
       {/* Header */}
       <div
-        className="odontogram-header"
         style={{
           display: "flex",
+          flexDirection: isMobile ? "column" : "row",
           justifyContent: "space-between",
           marginBottom: "20px",
+          gap: "10px",
         }}
       >
         <input
@@ -127,11 +128,10 @@ const Odontograms = ({ sidebarCollapsed }) => {
             padding: "10px 15px",
             borderRadius: "8px",
             border: "1px solid #ccc",
-            width: "250px",
+            width: isMobile ? "100%" : "250px",
           }}
         />
         <button
-          className="add-btn"
           onClick={handleAdd}
           style={{
             backgroundColor: "#2563eb",
@@ -140,7 +140,10 @@ const Odontograms = ({ sidebarCollapsed }) => {
             borderRadius: "8px",
             border: "none",
             cursor: "pointer",
+            transition: "transform 0.2s ease",
           }}
+          onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           Add Odontogram
         </button>
@@ -148,7 +151,6 @@ const Odontograms = ({ sidebarCollapsed }) => {
 
       {/* Table */}
       <div
-        className="odontogram-table"
         style={{
           background: "#fff",
           borderRadius: "12px",
@@ -156,53 +158,84 @@ const Odontograms = ({ sidebarCollapsed }) => {
           boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
         }}
       >
-        <div
-          className="table-header"
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr 120px",
-            fontWeight: "600",
-            padding: "12px 15px",
-            borderBottom: "2px solid #e5e7eb",
-          }}
-        >
-          <span>Patient</span>
-          <span>Doctor</span>
-          <span style={{ textAlign: "center" }}>Action</span>
-        </div>
+        {/* Header */}
+        {!isMobile && (
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 120px",
+              fontWeight: "600",
+              padding: "12px 15px",
+              borderBottom: "2px solid #e5e7eb",
+            }}
+          >
+            <span>Patient</span>
+            <span>Doctor</span>
+            <span style={{ textAlign: "center" }}>Action</span>
+          </div>
+        )}
 
+        {/* Rows */}
         {paginatedData.length > 0 ? (
           paginatedData.map((item, index) => (
             <div
               key={index}
-              className="table-row"
               style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 120px",
+                display: isMobile ? "block" : "grid",
+                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr 120px",
                 alignItems: "center",
                 padding: "12px 15px",
                 borderBottom: "1px solid #e5e7eb",
+                animation: "fadeIn 0.5s ease",
               }}
             >
-              <div>
+              <div style={{ marginBottom: isMobile ? "8px" : "0" }}>
                 <strong>{item.patient.name}</strong>
-                <div style={{ fontSize: "13px", color: "#6b7280" }}>{item.patient.email}</div>
+                <div style={{ fontSize: "13px", color: "#6b7280" }}>
+                  {item.patient.email}
+                </div>
               </div>
-              <div>
+              <div style={{ marginBottom: isMobile ? "8px" : "0" }}>
                 <strong>{item.doctor.name}</strong>
-                <div style={{ fontSize: "13px", color: "#6b7280" }}>{item.doctor.email}</div>
+                <div style={{ fontSize: "13px", color: "#6b7280" }}>
+                  {item.doctor.email}
+                </div>
               </div>
-              <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: isMobile ? "flex-start" : "center",
+                  gap: "10px",
+                }}
+              >
                 <FaEdit
-                  style={{ color: "#2563eb", cursor: "pointer" }}
+                  style={{
+                    color: "#2563eb",
+                    cursor: "pointer",
+                    transition: "transform 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+                  onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
                   onClick={() => handleEdit(index)}
                 />
                 <FaTrash
-                  style={{ color: "#dc2626", cursor: "pointer" }}
+                  style={{
+                    color: "#dc2626",
+                    cursor: "pointer",
+                    transition: "transform 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+                  onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
                   onClick={() => handleDelete(index)}
                 />
                 <FaPrint
-                  style={{ color: "#16a34a", cursor: "pointer" }}
+                  style={{
+                    color: "#16a34a",
+                    cursor: "pointer",
+                    transition: "transform 0.2s",
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+                  onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
                   onClick={() => alert("Print clicked")}
                 />
               </div>
@@ -217,7 +250,15 @@ const Odontograms = ({ sidebarCollapsed }) => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div style={{ marginTop: "20px", display: "flex", justifyContent: "center", gap: "8px" }}>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            justifyContent: "center",
+            gap: "8px",
+            flexWrap: "wrap",
+          }}
+        >
           <button
             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
             disabled={currentPage === 1}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaIdCard, FaEdit, FaTrash } from "react-icons/fa";
 
 const mockData = [
@@ -23,27 +23,27 @@ const ToggleSwitch = ({ defaultChecked = true }) => {
     <div
       onClick={() => setChecked(!checked)}
       style={{
-        width: "40px",
-        height: "20px",
+        width: "42px",
+        height: "22px",
         borderRadius: "20px",
         backgroundColor: checked ? "#4caf50" : "#ccc",
         position: "relative",
         cursor: "pointer",
-        transition: "0.3s",
+        transition: "background-color 0.3s ease",
         margin: "auto",
       }}
     >
       <div
         style={{
           position: "absolute",
-          top: "2px",
-          left: checked ? "22px" : "2px",
+          top: "3px",
+          left: checked ? "22px" : "3px",
           width: "16px",
           height: "16px",
           borderRadius: "50%",
           backgroundColor: "#fff",
-          transition: "0.3s",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.3)",
+          transition: "left 0.3s ease",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.3)",
         }}
       />
     </div>
@@ -57,12 +57,17 @@ const PatientSmartCards = ({ sidebarCollapsed }) => {
   const [sortConfig, setSortConfig] = useState({ key: "name", direction: "asc" });
   const rowsPerPage = 5;
 
-  // Filter by search
+  const [fade, setFade] = useState(false);
+  useEffect(() => {
+    setFade(true);
+  }, []);
+
+  // Filter
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  // Sort filtered data
+  // Sort
   let sortedData = [...filteredData];
   if (sortConfig !== null) {
     sortedData.sort((a, b) => {
@@ -80,9 +85,7 @@ const PatientSmartCards = ({ sidebarCollapsed }) => {
 
   const requestSort = (key) => {
     let direction = "asc";
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
+    if (sortConfig.key === key && sortConfig.direction === "asc") direction = "desc";
     setSortConfig({ key, direction });
   };
 
@@ -99,7 +102,6 @@ const PatientSmartCards = ({ sidebarCollapsed }) => {
 
   return (
     <div
-      className="main-content"
       style={{
         marginLeft: sidebarCollapsed ? "70px" : "250px",
         paddingTop: "80px",
@@ -107,65 +109,127 @@ const PatientSmartCards = ({ sidebarCollapsed }) => {
         transition: "margin-left 0.3s ease-in-out",
         minHeight: "calc(100vh - 60px)",
         backgroundColor: "#f8f9fa",
+        opacity: fade ? 1 : 0,
+        transform: fade ? "translateY(0px)" : "translateY(20px)",
+        transition: "opacity 0.6s ease, transform 0.6s ease",
       }}
     >
-      <div className="container-fluid px-4">
+      <div style={{ padding: "0 20px" }}>
         {/* Header */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: "20px",
+            flexWrap: "wrap",
+          }}
+        >
           <div>
-            <h2 className="mb-1" style={{ color: "#2c3e50", fontWeight: "600" }}>
-              Patient Smart Cards
-            </h2>
-            <p className="text-muted mb-0">Issue and manage patient smart cards efficiently.</p>
+            <h2 style={{ color: "#2c3e50", fontWeight: "600", margin: 0 }}>Patient Smart Cards</h2>
+            <p style={{ color: "#6c757d", margin: 0 }}>
+              Issue and manage patient smart cards efficiently.
+            </p>
           </div>
           <button
-            className="btn btn-primary d-flex align-items-center"
-            style={{ borderRadius: "8px", padding: "10px 20px", fontWeight: 500 }}
             onClick={handleAdd}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              background: "#007bff",
+              border: "none",
+              borderRadius: "8px",
+              padding: "10px 20px",
+              fontWeight: "500",
+              color: "#fff",
+              cursor: "pointer",
+              transition: "transform 0.2s ease, background 0.3s ease",
+              marginTop: "10px",
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
-            <FaIdCard className="me-2" />
-            Add New Patient Smart Card
+            <FaIdCard style={{ marginRight: "8px" }} /> Add New Patient Smart Card
           </button>
         </div>
 
         {/* Search */}
         <input
           type="text"
-          className="form-control mb-3"
           placeholder="🔍 Search patient smart cards..."
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
             setCurrentPage(1);
           }}
-          style={{ maxWidth: "300px", borderRadius: "8px", padding: "10px 15px" }}
+          style={{
+            maxWidth: "300px",
+            borderRadius: "8px",
+            padding: "10px 15px",
+            border: "1px solid #ccc",
+            marginBottom: "15px",
+            width: "100%",
+          }}
         />
 
         {/* Table */}
         <div
-          className="table-responsive shadow-sm"
-          style={{ borderRadius: "12px", overflow: "hidden", background: "#fff" }}
+          style={{
+            borderRadius: "12px",
+            overflowX: "auto",
+            background: "#fff",
+            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+            transition: "all 0.5s ease",
+          }}
         >
-          <table className="table table-bordered align-middle mb-0">
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead style={{ background: "#f1f3f5" }}>
               <tr>
-                <th style={{ cursor: "pointer" }} onClick={() => requestSort("name")}>
-                  Name {sortConfig.key === "name" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                <th
+                  style={{ padding: "12px", cursor: "pointer" }}
+                  onClick={() => requestSort("name")}
+                >
+                  Name{" "}
+                  {sortConfig.key === "name"
+                    ? sortConfig.direction === "asc"
+                      ? "↑"
+                      : "↓"
+                    : ""}
                 </th>
-                <th style={{ cursor: "pointer" }} onClick={() => requestSort("color")}>
-                  Color {sortConfig.key === "color" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                <th
+                  style={{ padding: "12px", cursor: "pointer" }}
+                  onClick={() => requestSort("color")}
+                >
+                  Color{" "}
+                  {sortConfig.key === "color"
+                    ? sortConfig.direction === "asc"
+                      ? "↑"
+                      : "↓"
+                    : ""}
                 </th>
                 {[...Array(6)].map((_, i) => (
-                  <th key={i}>Switch {i + 1}</th>
+                  <th key={i} style={{ padding: "12px", textAlign: "center" }}>
+                    Switch {i + 1}
+                  </th>
                 ))}
-                <th style={{ textAlign: "center" }}>Action</th>
+                <th style={{ padding: "12px", textAlign: "center" }}>Action</th>
               </tr>
             </thead>
             <tbody>
               {currentRows.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.name}</td>
-                  <td>
+                <tr
+                  key={index}
+                  style={{
+                    transition: "background 0.3s ease, opacity 0.5s ease, transform 0.5s ease",
+                    opacity: fade ? 1 : 0,
+                    transform: fade ? "translateY(0px)" : "translateY(10px)",
+                    transitionDelay: `${index * 0.1}s`, // row by row delay
+                  }}
+                  onMouseOver={(e) => (e.currentTarget.style.background = "#f9f9f9")}
+                  onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+                >
+                  <td style={{ padding: "10px" }}>{item.name}</td>
+                  <td style={{ padding: "10px" }}>
                     <div
                       style={{
                         width: "20px",
@@ -177,17 +241,30 @@ const PatientSmartCards = ({ sidebarCollapsed }) => {
                     />
                   </td>
                   {[...Array(6)].map((_, i) => (
-                    <td key={i}>
+                    <td key={i} style={{ textAlign: "center", padding: "10px" }}>
                       <ToggleSwitch defaultChecked={true} />
                     </td>
                   ))}
-                  <td style={{ textAlign: "center" }}>
+                  <td style={{ textAlign: "center", padding: "10px" }}>
                     <FaEdit
-                      style={{ color: "#007bff", cursor: "pointer", marginRight: "12px" }}
+                      style={{
+                        color: "#007bff",
+                        cursor: "pointer",
+                        marginRight: "12px",
+                        transition: "transform 0.2s",
+                      }}
+                      onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+                      onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
                       onClick={() => alert(`Edit ${item.name}`)}
                     />
                     <FaTrash
-                      style={{ color: "#dc3545", cursor: "pointer" }}
+                      style={{
+                        color: "#dc3545",
+                        cursor: "pointer",
+                        transition: "transform 0.2s",
+                      }}
+                      onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.2)")}
+                      onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
                       onClick={() => handleDelete(item.name)}
                     />
                   </td>
@@ -195,7 +272,10 @@ const PatientSmartCards = ({ sidebarCollapsed }) => {
               ))}
               {currentRows.length === 0 && (
                 <tr>
-                  <td colSpan="9" className="text-center text-muted py-3">
+                  <td
+                    colSpan="9"
+                    style={{ textAlign: "center", color: "#6c757d", padding: "15px" }}
+                  >
                     No matching records found.
                   </td>
                 </tr>
@@ -206,23 +286,61 @@ const PatientSmartCards = ({ sidebarCollapsed }) => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="d-flex justify-content-center mt-3">
+          <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
             <nav>
-              <ul className="pagination">
-                <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
-                  <button className="page-link" onClick={() => setCurrentPage(currentPage - 1)}>
+              <ul style={{ display: "flex", listStyle: "none", padding: 0, margin: 0 }}>
+                <li>
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(currentPage - 1)}
+                    style={{
+                      margin: "0 5px",
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #007bff",
+                      background: currentPage === 1 ? "#ccc" : "#007bff",
+                      color: "#fff",
+                      cursor: currentPage === 1 ? "not-allowed" : "pointer",
+                      transition: "transform 0.2s",
+                    }}
+                  >
                     Previous
                   </button>
                 </li>
                 {Array.from({ length: totalPages }, (_, i) => (
-                  <li key={i} className={`page-item ${currentPage === i + 1 ? "active" : ""}`}>
-                    <button className="page-link" onClick={() => setCurrentPage(i + 1)}>
+                  <li key={i}>
+                    <button
+                      onClick={() => setCurrentPage(i + 1)}
+                      style={{
+                        margin: "0 5px",
+                        padding: "8px 14px",
+                        borderRadius: "6px",
+                        border: "1px solid #007bff",
+                        background: currentPage === i + 1 ? "#007bff" : "#fff",
+                        color: currentPage === i + 1 ? "#fff" : "#007bff",
+                        cursor: "pointer",
+                        transition: "transform 0.2s",
+                      }}
+                    >
                       {i + 1}
                     </button>
                   </li>
                 ))}
-                <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
-                  <button className="page-link" onClick={() => setCurrentPage(currentPage + 1)}>
+                <li>
+                  <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(currentPage + 1)}
+                    style={{
+                      margin: "0 5px",
+                      padding: "8px 14px",
+                      borderRadius: "6px",
+                      border: "1px solid #007bff",
+                      background: currentPage === totalPages ? "#ccc" : "#007bff",
+                      color: "#fff",
+                      cursor: currentPage === totalPages ? "not-allowed" : "pointer",
+                      transition: "transform 0.2s",
+                    }}
+                  >
                     Next
                   </button>
                 </li>
